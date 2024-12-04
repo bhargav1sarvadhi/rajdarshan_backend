@@ -166,4 +166,9 @@ export enum END_POINTS {
     CREATE_ACCOUNT_DETAILS = '/create-account-details',
     GET_ACCOUNTS = '/get-account-details',
     GET_ACCOUNTS_TOTAL = '/get-account-total',
+
+    //HOTEL
+
+    CREATE_HOTEL_RATE = '/create-hotel-rate',
+    HOTEL = '/hotel',
 }

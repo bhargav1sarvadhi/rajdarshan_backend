@@ -62,7 +62,8 @@
         "get_gruop_join_request": "Find recently recived join request successfully!!",
         "check_exists_phone": "user is exist in database",
         "deactive": "professional is successfully deactive!!",
-        "delete_user": "user deleted successfully!!"
+        "delete_user": "user deleted successfully!!",
+        "create_hotel_rate":"Create hotel rate successfully"
     },
     "user": {
         "alreadyExists": "User with same email already exist!",

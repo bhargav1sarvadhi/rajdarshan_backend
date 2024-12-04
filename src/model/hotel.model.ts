@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { compareSync, hashSync, genSaltSync } from 'bcrypt';
 
-export const HotelModel = (sequelize) => {
+export const hotelModel = (sequelize) => {
     const hotelModel = sequelize.define(
         'hotel_details',
         {
