@@ -90,22 +90,157 @@ class HotelController {
             return next(error);
         }
     }
-    async delete_hotel(req, res, next) {
+    async create_pickupdrop_rate(req, res, next) {
         try {
             const {
-                params: { id },
+                body: { vehicle_type, type, place, rate },
             } = req;
-            const delete_user = await db[MODEL.HOTEL].destroy({
-                where: { id },
+
+            const [find_rate, created] = await db[
+                MODEL.PICKUPDROP
+            ].findOrCreate({
+                where: {
+                    vehicle_type,
+                    type,
+                    place,
+                },
+                defaults: {
+                    vehicle_type,
+                    type,
+                    place,
+                    rate,
+                },
             });
-            if (!delete_user) {
-                return next(
-                    new AppError(RES_TYPES.ID_NOT_FOUND, ERRORTYPES.NOT_FOUND),
+
+            if (find_rate) {
+                const update = await db[MODEL.PICKUPDROP].update(
+                    {
+                        rate,
+                    },
+                    {
+                        where: {
+                            vehicle_type,
+                            type,
+                            place,
+                        },
+                    },
                 );
             }
+
             return sendResponse(res, req, {
-                responseType: RES_STATUS.DELETE,
-                message: res.__('admin').delete_user,
+                responseType: RES_STATUS.CREATE,
+                message: res.__('admin').create_hotel_rate,
+            });
+        } catch (error) {
+            return next(error);
+        }
+    }
+    async create_sightseeing_rate(req, res, next) {
+        try {
+            const {
+                body: { vehicle_type, type, place, rate },
+            } = req;
+
+            const [find_rate, created] = await db[
+                MODEL.SIGHTSEEING
+            ].findOrCreate({
+                where: {
+                    vehicle_type,
+                    type,
+                    place,
+                }, // Match based on the hotel name
+                defaults: {
+                    vehicle_type,
+                    type,
+                    place,
+                    rate,
+                }, // Provide additional details for creation if it doesn't exist
+            });
+
+            if (find_rate) {
+                const update = await db[MODEL.SIGHTSEEING].update(
+                    {
+                        rate,
+                    },
+                    {
+                        where: {
+                            vehicle_type,
+                            type,
+                            place,
+                        },
+                    },
+                );
+            }
+
+            return sendResponse(res, req, {
+                responseType: RES_STATUS.CREATE,
+                message: res.__('admin').create_hotel_rate,
+            });
+        } catch (error) {
+            return next(error);
+        }
+    }
+    async activity_rate(req, res, next) {
+        try {
+            const {
+                body: { activity_name, rate },
+            } = req;
+
+            const [find_rate, created] = await db[MODEL.ACTIVITY].findOrCreate({
+                where: {
+                    activity_name,
+                },
+                defaults: {
+                    activity_name,
+                    rate,
+                },
+            });
+
+            if (find_rate) {
+                const update = await db[MODEL.ACTIVITY].update(
+                    {
+                        rate,
+                    },
+                    {
+                        where: {
+                            activity_name,
+                        },
+                    },
+                );
+            }
+
+            return sendResponse(res, req, {
+                responseType: RES_STATUS.CREATE,
+                message: res.__('admin').create_hotel_rate,
+            });
+        } catch (error) {
+            return next(error);
+        }
+    }
+    async get_rates(req, res, next) {
+        try {
+            const {
+                body: {
+                    check_in_date,
+                    number_of_nights,
+                    meal_plan,
+                    extra_adult_with_mattress,
+                    extra_child_with_mattress,
+                    extra_child_without_mattress,
+                    vehicle_type,
+                    pickup,
+                    drop,
+                    south_goa_tour,
+                    north_goa_tour,
+                    activity_1,
+                    activity_2,
+                    activity_3,
+                },
+            } = req;
+
+            return sendResponse(res, req, {
+                responseType: RES_STATUS.CREATE,
+                message: res.__('admin').create_hotel_rate,
             });
         } catch (error) {
             return next(error);

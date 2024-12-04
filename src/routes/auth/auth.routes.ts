@@ -15,6 +15,8 @@ class AuthRoutes extends BaseRoute {
         this.router.get(END_POINTS.VERIFY_USER, authController.verify_user);
         this.router.post(
             END_POINTS.SIGN_UP,
+            passport.authenticate('local', { session: false }),
+            checkPermission(ROLES.SUPER_ADMIN),
             SignupValidqtion,
             authController.sign_up,
         );

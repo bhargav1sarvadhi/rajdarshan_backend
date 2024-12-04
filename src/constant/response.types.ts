@@ -90,6 +90,9 @@ export enum MODEL {
     TRIP_DETAILS = 'tripDetailsModel',
     ACCOUNT_DETAILS = 'accountsDetailsModel',
     HOTEL = 'hotelModel',
+    ACTIVITY = 'activityModel',
+    PICKUPDROP = 'pickupdropModel',
+    SIGHTSEEING = 'sightseeingModel',
 }
 
 export enum NotificationTypes {
