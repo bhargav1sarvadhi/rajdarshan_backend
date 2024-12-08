@@ -274,8 +274,11 @@ class HotelController {
                     place: drop,
                 },
             });
+            console.log(number_of_couples, 'number of couples');
+
+            const couples = number_of_couples * 2;
             const pickupdroprate =
-                (pickup_rate?.rate + drop_rate?.rate) / number_of_couples;
+                (pickup_rate?.rate + drop_rate?.rate) / couples;
             let activity_1_rate = 0;
             let activity_2_rate = 0;
             let activity_3_rate = 0;
