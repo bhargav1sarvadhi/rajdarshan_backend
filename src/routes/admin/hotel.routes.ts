@@ -12,7 +12,7 @@ class HotelRoutes extends BaseRoute {
         );
         this.router.post(
             END_POINTS.GET_HOTEL_RATE,
-            checkPermission([ROLES.SUPER_ADMIN, ROLES.USER]),
+            // checkPermission([ROLES.SUPER_ADMIN, ROLES.USER]),
             hotelController.get_rates,
         );
         this.router.post(
