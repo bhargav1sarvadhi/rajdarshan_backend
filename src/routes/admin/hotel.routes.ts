@@ -11,9 +11,19 @@ class HotelRoutes extends BaseRoute {
             hotelController.create_hotel_rate,
         );
         this.router.post(
+            END_POINTS.RAJASTHAN_CREATE_HOTEL_RATE,
+            checkPermission([ROLES.SUPER_ADMIN]),
+            hotelController.rajasthan_create_hotel_rate,
+        );
+        this.router.post(
             END_POINTS.GET_HOTEL_RATE,
             // checkPermission([ROLES.SUPER_ADMIN, ROLES.USER]),
             hotelController.get_rates,
+        );
+        this.router.post(
+            END_POINTS.RAJASTHAN_GET_HOTEL_RATE,
+            // checkPermission([ROLES.SUPER_ADMIN, ROLES.USER]),
+            hotelController.rajasthan_get_rates,
         );
         this.router.post(
             END_POINTS.CREATE_PICKUPDROP_RATE,

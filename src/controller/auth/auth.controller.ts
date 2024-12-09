@@ -314,6 +314,8 @@ class AuthController {
             const {
                 body: { email, password },
             } = req;
+            console.log(password);
+
             const update_password = await db[MODEL.USER].update(
                 { password },
                 { where: { email: email } },

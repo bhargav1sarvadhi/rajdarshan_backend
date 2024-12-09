@@ -93,6 +93,7 @@ export enum MODEL {
     ACTIVITY = 'activityModel',
     PICKUPDROP = 'pickupdropModel',
     SIGHTSEEING = 'sightseeingModel',
+    RAJASTHAN_HOTEL = 'rajasthanwhotelModel',
 }
 
 export enum NotificationTypes {

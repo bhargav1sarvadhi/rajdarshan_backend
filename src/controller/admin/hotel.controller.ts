@@ -68,10 +68,87 @@ class HotelController {
                 if (find_hotel) {
                     const update = await db[MODEL.HOTEL].update(
                         {
-                            rate,
-                            extra_adult_with_mattress,
-                            extra_child_with_mattress,
-                            extra_child_without_mattress,
+                            rate: rate ? rate : find_hotel?.rate,
+                            extra_adult_with_mattress: extra_adult_with_mattress
+                                ? extra_adult_with_mattress
+                                : find_hotel.extra_adult_with_mattress,
+                            extra_child_with_mattress: extra_child_with_mattress
+                                ? extra_child_with_mattress
+                                : find_hotel.extra_child_with_mattress,
+                            extra_child_without_mattress:
+                                extra_child_without_mattress
+                                    ? extra_child_without_mattress
+                                    : find_hotel.extra_child_without_mattress,
+                        },
+                        {
+                            where: {
+                                hotel_name: hotel_name,
+                                date: current_date,
+                                meal_plan: meal_plan,
+                            },
+                        },
+                    );
+                }
+            });
+            return sendResponse(res, req, {
+                responseType: RES_STATUS.CREATE,
+                message: res.__('admin').create_hotel_rate,
+            });
+        } catch (error) {
+            return next(error);
+        }
+    }
+    async rajasthan_create_hotel_rate(req, res, next) {
+        try {
+            const {
+                body: {
+                    hotel_name,
+                    start_date,
+                    end_date,
+                    meal_plan,
+                    rate,
+                    extra_adult_with_mattress,
+                    extra_child_with_mattress,
+                    extra_child_without_mattress,
+                },
+            } = req;
+            const dates = getDatesBetween(start_date, end_date);
+            console.log(dates);
+
+            dates.map(async (current_date) => {
+                const [find_hotel, created] = await db[
+                    MODEL.RAJASTHAN_HOTEL
+                ].findOrCreate({
+                    where: {
+                        hotel_name: hotel_name,
+                        date: current_date,
+                        meal_plan: meal_plan,
+                    }, // Match based on the hotel name
+                    defaults: {
+                        hotel_name,
+                        date: current_date,
+                        meal_plan,
+                        rate,
+                        extra_adult_with_mattress,
+                        extra_child_with_mattress,
+                        extra_child_without_mattress,
+                    }, // Provide additional details for creation if it doesn't exist
+                });
+
+                if (find_hotel) {
+                    const update = await db[MODEL.RAJASTHAN_HOTEL].update(
+                        {
+                            rate: rate ? rate : find_hotel?.rate,
+                            extra_adult_with_mattress: extra_adult_with_mattress
+                                ? extra_adult_with_mattress
+                                : find_hotel.extra_adult_with_mattress,
+                            extra_child_with_mattress: extra_child_with_mattress
+                                ? extra_child_with_mattress
+                                : find_hotel.extra_child_with_mattress,
+                            extra_child_without_mattress:
+                                extra_child_without_mattress
+                                    ? extra_child_without_mattress
+                                    : find_hotel.extra_child_without_mattress,
                         },
                         {
                             where: {
@@ -345,6 +422,115 @@ class HotelController {
             console.log('north_goa_tour ', north_goa_tour_rate);
             console.log('south_goa_tour_rate ', south_goa_tour_rate);
 
+            for (const resort of resorts) {
+                let totalRate = 0;
+                let totalExtraAdultWithMattress = 0;
+                let totalExtrachildWithMattress = 0;
+                let totalExtrachildWithoutMattress = 0;
+
+                for (const date of datesBetween) {
+                    const find_rate = await db[MODEL.HOTEL].findOne({
+                        where: {
+                            hotel_name: resort,
+                            date: date,
+                            meal_plan: meal_plan,
+                        },
+                    });
+
+                    if (find_rate) {
+                        totalRate += find_rate.rate;
+                        totalExtraAdultWithMattress +=
+                            find_rate.extra_adult_with_mattress;
+                        totalExtrachildWithMattress +=
+                            find_rate.extra_child_with_mattress;
+                        totalExtrachildWithoutMattress +=
+                            find_rate.extra_child_without_mattress;
+                    } else {
+                        return next(
+                            new AppError(
+                                RES_TYPES.SELECT_NOT_FOUND,
+                                ERRORTYPES.NOT_FOUND,
+                            ),
+                        );
+                    }
+                }
+
+                if (
+                    totalRate > 0 ||
+                    totalExtraAdultWithMattress > 0 ||
+                    totalExtrachildWithMattress > 0 ||
+                    totalExtrachildWithoutMattress > 0
+                ) {
+                    rates.push({
+                        [resort]: {
+                            rate:
+                                (totalRate +
+                                    pickupdroprate +
+                                    activity_1_rate +
+                                    activity_2_rate +
+                                    activity_3_rate +
+                                    dudhsagar_tour_rate +
+                                    north_goa_tour_rate +
+                                    south_goa_tour_rate) *
+                                2,
+                            extra_adult_with_mattress:
+                                totalExtraAdultWithMattress *
+                                extra_adult_with_mattress,
+                            extra_child_with_mattress:
+                                totalExtrachildWithMattress *
+                                extra_child_with_mattress,
+                            extra_child_without_mattress:
+                                totalExtrachildWithoutMattress *
+                                extra_child_without_mattress,
+                        },
+                    });
+                }
+            }
+
+            return sendResponse(res, req, {
+                responseType: RES_STATUS.GET,
+                data: rates,
+                message: res.__('admin').create_hotel_rate,
+            });
+        } catch (error) {
+            return next(error);
+        }
+    }
+    async rajasthan_get_rates(req, res, next) {
+        try {
+            const {
+                body: {
+                    check_in_date,
+                    number_of_couples,
+                    number_of_nights,
+                    meal_plan,
+                    resorts,
+                    extra_adult_with_mattress,
+                    extra_child_with_mattress,
+                    extra_child_without_mattress,
+                },
+            } = req;
+
+            const checkInDate = moment(check_in_date, 'YYYY-MM-DD');
+            const checkOutDate = checkInDate
+                .clone()
+                .add(number_of_nights, 'days');
+            console.log('Check-In Date:', checkInDate.format('YYYY-MM-DD'));
+            console.log('Number of Nights:', number_of_nights);
+            console.log('Check-Out Date:', checkOutDate.format('YYYY-MM-DD'));
+            console.log('Meal Plan', meal_plan);
+            const datesBetween = [];
+            let currentDate = checkInDate.clone();
+            while (currentDate.isBefore(checkOutDate)) {
+                // Exclude the checkout date
+                datesBetween.push(currentDate.format('YYYY-MM-DD')); // Add formatted date to the array
+                currentDate.add(1, 'days'); // Move to the next day
+            }
+            const rates = [];
+            console.log(resorts);
+
+            console.log(number_of_couples, 'number of couples');
+
             // for (const resort of resorts) {
             //     rates[resort] = [];
             //     for (const date of datesBetween) {
@@ -391,7 +577,7 @@ class HotelController {
                 let totalExtrachildWithoutMattress = 0;
 
                 for (const date of datesBetween) {
-                    const find_rate = await db[MODEL.HOTEL].findOne({
+                    const find_rate = await db[MODEL.RAJASTHAN_HOTEL].findOne({
                         where: {
                             hotel_name: resort,
                             date: date,
@@ -400,13 +586,20 @@ class HotelController {
                     });
 
                     if (find_rate) {
-                        totalRate += find_rate.rate;
+                        totalRate += find_rate?.rate;
                         totalExtraAdultWithMattress +=
                             find_rate.extra_adult_with_mattress;
                         totalExtrachildWithMattress +=
                             find_rate.extra_child_with_mattress;
                         totalExtrachildWithoutMattress +=
                             find_rate.extra_child_without_mattress;
+                    } else {
+                        return next(
+                            new AppError(
+                                RES_TYPES.SELECT_NOT_FOUND,
+                                ERRORTYPES.NOT_FOUND,
+                            ),
+                        );
                     }
                 }
 
@@ -418,15 +611,7 @@ class HotelController {
                 ) {
                     rates.push({
                         [resort]: {
-                            rate:
-                                totalRate +
-                                pickupdroprate +
-                                activity_1_rate +
-                                activity_2_rate +
-                                activity_3_rate +
-                                dudhsagar_tour_rate +
-                                north_goa_tour_rate +
-                                south_goa_tour_rate,
+                            rate: totalRate * 2,
                             extra_adult_with_mattress:
                                 totalExtraAdultWithMattress *
                                 extra_adult_with_mattress,

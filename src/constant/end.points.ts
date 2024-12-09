@@ -170,7 +170,9 @@ export enum END_POINTS {
     //HOTEL
 
     CREATE_HOTEL_RATE = '/create-hotel-rate',
+    RAJASTHAN_CREATE_HOTEL_RATE = '/rajasthan-create-hotel-rate',
     GET_HOTEL_RATE = '/get-hotel-rate',
+    RAJASTHAN_GET_HOTEL_RATE = '/rajasthan-get-hotel-rate',
     CREATE_PICKUPDROP_RATE = '/pickupdrop-rate',
     CREATE_SIGHTSEEING_RATE = '/sightseeing-rate',
     CREATE_ACTIVITY_RATE = '/activity-rate',
