@@ -355,7 +355,11 @@ class HotelController {
 
             const couples = number_of_couples * 2;
             const pickupdroprate =
-                (pickup_rate?.rate + drop_rate?.rate) / couples;
+                (pickup_rate?.rate
+                    ? pickup_rate?.rate
+                    : 0 + drop_rate?.rate
+                    ? drop_rate?.rate
+                    : 0) / couples;
             let activity_1_rate = 0;
             let activity_2_rate = 0;
             let activity_3_rate = 0;
