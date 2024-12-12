@@ -400,11 +400,11 @@ class HotelController {
                 if (south_goa_tour === 'SIC') {
                     south_goa_tour_rate = rate ? rate.rate : 0;
                 } else {
-                    const No_ofcouples =
-                        couples +
-                        extra_child_without_mattress +
-                        extra_child_with_mattress;
-                    south_goa_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                    // const No_ofcouples =
+                    //     couples +
+                    //     extra_child_without_mattress +
+                    //     extra_child_with_mattress;
+                    south_goa_tour_rate = rate ? rate.rate / couples : 0;
                 }
             }
             let north_goa_tour_rate = 0;
@@ -419,13 +419,13 @@ class HotelController {
                 if (north_goa_tour === 'SIC') {
                     north_goa_tour_rate = rate ? rate.rate : 0;
                 } else {
-                    const No_ofcouples =
-                        couples + extra_child_without_mattress
-                            ? extra_child_without_mattress
-                            : 0 + extra_child_with_mattress
-                            ? extra_child_with_mattress
-                            : 0;
-                    north_goa_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                    // const No_ofcouples =
+                    //     couples + extra_child_without_mattress
+                    //         ? extra_child_without_mattress
+                    //         : 0 + extra_child_with_mattress
+                    //         ? extra_child_with_mattress
+                    //         : 0;
+                    north_goa_tour_rate = rate ? rate.rate / couples : 0;
                 }
             }
             let dudhsagar_tour_rate = 0;
@@ -440,13 +440,13 @@ class HotelController {
                 if (dudhsagar_tour === 'SIC') {
                     dudhsagar_tour_rate = rate ? rate.rate : 0;
                 } else {
-                    const No_ofcouples =
-                        couples + extra_child_without_mattress
-                            ? extra_child_without_mattress
-                            : 0 + extra_child_with_mattress
-                            ? extra_child_with_mattress
-                            : 0;
-                    dudhsagar_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                    // const No_ofcouples =
+                    //     couples + extra_child_without_mattress
+                    //         ? extra_child_without_mattress
+                    //         : 0 + extra_child_with_mattress
+                    //         ? extra_child_with_mattress
+                    //         : 0;
+                    dudhsagar_tour_rate = rate ? rate.rate / couples : 0;
                 }
             }
             console.log('pickluodroip ', pickuprate);
