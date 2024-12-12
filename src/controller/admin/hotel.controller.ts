@@ -353,13 +353,13 @@ class HotelController {
             });
             console.log(number_of_couples, 'number of couples');
 
-            const couples = number_of_couples * 2;
-            const pickupdroprate =
-                (pickup_rate?.rate
-                    ? pickup_rate?.rate
-                    : 0 + drop_rate?.rate
-                    ? drop_rate?.rate
-                    : 0) / couples;
+            const couples = number_of_couples * 2 + extra_adult_with_mattress;
+            console.log(couples);
+
+            const pickuprate = pickup_rate?.rate
+                ? pickup_rate?.rate / couples
+                : 0;
+            const droprate = drop_rate?.rate ? drop_rate?.rate / couples : 0;
             let activity_1_rate = 0;
             let activity_2_rate = 0;
             let activity_3_rate = 0;
@@ -397,7 +397,15 @@ class HotelController {
                         place: 'SOUTH GOA SIGHTSEEN',
                     },
                 });
-                south_goa_tour_rate = rate ? rate.rate : 0;
+                if (south_goa_tour === 'SIC') {
+                    south_goa_tour_rate = rate ? rate.rate : 0;
+                } else {
+                    const No_ofcouples =
+                        couples +
+                        extra_child_without_mattress +
+                        extra_child_with_mattress;
+                    south_goa_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                }
             }
             let north_goa_tour_rate = 0;
             if (north_goa_tour && north_goa_tour != 'NO') {
@@ -408,7 +416,17 @@ class HotelController {
                         place: 'NORTH GOA SIGHTSEEN',
                     },
                 });
-                north_goa_tour_rate = rate ? rate.rate : 0;
+                if (north_goa_tour === 'SIC') {
+                    north_goa_tour_rate = rate ? rate.rate : 0;
+                } else {
+                    const No_ofcouples =
+                        couples + extra_child_without_mattress
+                            ? extra_child_without_mattress
+                            : 0 + extra_child_with_mattress
+                            ? extra_child_with_mattress
+                            : 0;
+                    north_goa_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                }
             }
             let dudhsagar_tour_rate = 0;
             if (dudhsagar_tour && dudhsagar_tour != 'NO') {
@@ -419,9 +437,20 @@ class HotelController {
                         place: 'DUDHSAGAR SIGHTSEEN',
                     },
                 });
-                dudhsagar_tour_rate = rate ? rate.rate : 0;
+                if (dudhsagar_tour === 'SIC') {
+                    dudhsagar_tour_rate = rate ? rate.rate : 0;
+                } else {
+                    const No_ofcouples =
+                        couples + extra_child_without_mattress
+                            ? extra_child_without_mattress
+                            : 0 + extra_child_with_mattress
+                            ? extra_child_with_mattress
+                            : 0;
+                    dudhsagar_tour_rate = rate ? rate.rate / No_ofcouples : 0;
+                }
             }
-            console.log('pickluodroip ', pickupdroprate);
+            console.log('pickluodroip ', pickuprate);
+            console.log('drop ', droprate);
             console.log('dudhsagar_tour_rate ', dudhsagar_tour_rate);
             console.log('north_goa_tour ', north_goa_tour_rate);
             console.log('south_goa_tour_rate ', south_goa_tour_rate);
@@ -459,6 +488,19 @@ class HotelController {
                     }
                 }
 
+                const adult_with_mattress =
+                    totalExtraAdultWithMattress * extra_adult_with_mattress;
+                const child_with_mattress =
+                    totalExtrachildWithMattress * extra_child_with_mattress;
+                const child_without_mattress =
+                    totalExtrachildWithoutMattress *
+                    extra_child_without_mattress;
+                console.log(
+                    adult_with_mattress,
+                    child_with_mattress,
+                    child_without_mattress,
+                );
+
                 if (
                     totalRate > 0 ||
                     totalExtraAdultWithMattress > 0 ||
@@ -467,25 +509,54 @@ class HotelController {
                 ) {
                     rates.push({
                         [resort]: {
-                            rate:
+                            rate: Math.round(
                                 (totalRate +
-                                    pickupdroprate +
+                                    pickuprate +
+                                    droprate +
                                     activity_1_rate +
                                     activity_2_rate +
                                     activity_3_rate +
                                     dudhsagar_tour_rate +
                                     north_goa_tour_rate +
                                     south_goa_tour_rate) *
-                                2,
-                            extra_adult_with_mattress:
-                                totalExtraAdultWithMattress *
-                                extra_adult_with_mattress,
-                            extra_child_with_mattress:
-                                totalExtrachildWithMattress *
-                                extra_child_with_mattress,
-                            extra_child_without_mattress:
-                                totalExtrachildWithoutMattress *
-                                extra_child_without_mattress,
+                                    2,
+                            ),
+                            extra_adult_with_mattress: Math.round(
+                                adult_with_mattress +
+                                    pickuprate +
+                                    droprate +
+                                    south_goa_tour_rate +
+                                    north_goa_tour_rate +
+                                    dudhsagar_tour_rate +
+                                    activity_1_rate +
+                                    activity_2_rate +
+                                    activity_3_rate,
+                            ),
+                            extra_child_with_mattress: Math.round(
+                                child_with_mattress +
+                                    (south_goa_tour === 'SIC'
+                                        ? south_goa_tour_rate
+                                        : 0) +
+                                    (north_goa_tour === 'SIC'
+                                        ? north_goa_tour_rate
+                                        : 0) +
+                                    (dudhsagar_tour === 'SIC'
+                                        ? dudhsagar_tour_rate
+                                        : 0),
+                            ),
+                            extra_child_without_mattress: Math.round(
+                                child_without_mattress +
+                                    child_with_mattress +
+                                    (south_goa_tour === 'SIC'
+                                        ? south_goa_tour_rate
+                                        : 0) +
+                                    (north_goa_tour === 'SIC'
+                                        ? north_goa_tour_rate
+                                        : 0) +
+                                    (dudhsagar_tour === 'SIC'
+                                        ? dudhsagar_tour_rate
+                                        : 0),
+                            ),
                         },
                     });
                 }
