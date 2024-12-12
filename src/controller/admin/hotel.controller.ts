@@ -521,42 +521,49 @@ class HotelController {
                                     south_goa_tour_rate) *
                                     2,
                             ),
-                            extra_adult_with_mattress: Math.round(
-                                adult_with_mattress +
-                                    pickuprate +
-                                    droprate +
-                                    south_goa_tour_rate +
-                                    north_goa_tour_rate +
-                                    dudhsagar_tour_rate +
-                                    activity_1_rate +
-                                    activity_2_rate +
-                                    activity_3_rate,
-                            ),
-                            extra_child_with_mattress: Math.round(
-                                child_with_mattress +
-                                    (south_goa_tour === 'SIC'
-                                        ? south_goa_tour_rate
-                                        : 0) +
-                                    (north_goa_tour === 'SIC'
-                                        ? north_goa_tour_rate
-                                        : 0) +
-                                    (dudhsagar_tour === 'SIC'
-                                        ? dudhsagar_tour_rate
-                                        : 0),
-                            ),
-                            extra_child_without_mattress: Math.round(
-                                child_without_mattress +
-                                    child_with_mattress +
-                                    (south_goa_tour === 'SIC'
-                                        ? south_goa_tour_rate
-                                        : 0) +
-                                    (north_goa_tour === 'SIC'
-                                        ? north_goa_tour_rate
-                                        : 0) +
-                                    (dudhsagar_tour === 'SIC'
-                                        ? dudhsagar_tour_rate
-                                        : 0),
-                            ),
+                            extra_adult_with_mattress: extra_adult_with_mattress
+                                ? Math.round(
+                                      adult_with_mattress +
+                                          pickuprate +
+                                          droprate +
+                                          south_goa_tour_rate +
+                                          north_goa_tour_rate +
+                                          dudhsagar_tour_rate +
+                                          activity_1_rate +
+                                          activity_2_rate +
+                                          activity_3_rate,
+                                  )
+                                : 0,
+                            extra_child_with_mattress: extra_child_with_mattress
+                                ? Math.round(
+                                      child_with_mattress +
+                                          (south_goa_tour === 'SIC'
+                                              ? south_goa_tour_rate
+                                              : 0) +
+                                          (north_goa_tour === 'SIC'
+                                              ? north_goa_tour_rate
+                                              : 0) +
+                                          (dudhsagar_tour === 'SIC'
+                                              ? dudhsagar_tour_rate
+                                              : 0),
+                                  )
+                                : 0,
+                            extra_child_without_mattress:
+                                extra_child_without_mattress
+                                    ? Math.round(
+                                          child_without_mattress +
+                                              child_with_mattress +
+                                              (south_goa_tour === 'SIC'
+                                                  ? south_goa_tour_rate
+                                                  : 0) +
+                                              (north_goa_tour === 'SIC'
+                                                  ? north_goa_tour_rate
+                                                  : 0) +
+                                              (dudhsagar_tour === 'SIC'
+                                                  ? dudhsagar_tour_rate
+                                                  : 0),
+                                      )
+                                    : 0,
                         },
                     });
                 }
